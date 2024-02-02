@@ -13,6 +13,8 @@ window.onload = function () {
     var lives ;             // Lives
     var counter ;           // Count correct geusses
     var space;              // Number of spaces in word '-'
+    var gameEnded = false;  // Boolean variable to track game status
+
   
     // Get elements
     var showLives = document.getElementById("mylives");
@@ -42,11 +44,11 @@ window.onload = function () {
     // Select Catagory
     var selectCat = function () {
       if (chosenCategory === categories[0]) {
-        catagoryName.innerHTML = "The Chosen Category Is Premier League Football Teams";
+        catagoryName.innerHTML = "Guess this IPL team";
       } else if (chosenCategory === categories[1]) {
-        catagoryName.innerHTML = "The Chosen Category Is Films";
+        catagoryName.innerHTML = "Guess this Film";
       } else if (chosenCategory === categories[2]) {
-        catagoryName.innerHTML = "The Chosen Category Is Cities";
+        catagoryName.innerHTML = "Guess this City";
       }
     }
   
@@ -77,10 +79,13 @@ window.onload = function () {
       showLives.innerHTML = "You have " + lives + " lives";
       if (lives < 1) {
         showLives.innerHTML = "Game Over";
+        gameEnded = true;
       }
       for (var i = 0; i < geusses.length; i++) {
         if (counter + space === geusses.length) {
           showLives.innerHTML = "You Win!";
+          gameEnded = true;
+
         }
       }
     }
@@ -117,19 +122,10 @@ window.onload = function () {
       context.stroke(); 
   }
   
-     frame1 = function() {
+     frame = function() {
        draw (0, 150, 150, 150);
-     };
-     
-     frame2 = function() {
        draw (10, 0, 10, 600);
-     };
-    
-     frame3 = function() {
        draw (0, 5, 70, 5);
-     };
-    
-     frame4 = function() {
        draw (60, 5, 60, 15);
      };
     
@@ -145,20 +141,23 @@ window.onload = function () {
        draw (60, 46, 20, 50);
      };
     
-     rightLeg = function() {
+     legs = function() {
        draw (60, 70, 100, 100);
-     };
-    
-     leftLeg = function() {
        draw (60, 70, 20, 100);
      };
-    
-    drawArray = [rightLeg, leftLeg, rightArm, leftArm,  torso,  head, frame4, frame3, frame2, frame1]; 
+
+    drawArray = [legs, rightArm, leftArm,  torso,  head, frame]; 
+
   
   
     // OnClick Function
      check = function () {
+
       list.onclick = function () {
+        if (gameEnded) {
+          return; // Game is already won or lost, do nothing
+        }
+
         var geuss = (this.innerHTML);
         this.setAttribute("class", "active");
         this.onclick = null;
@@ -183,7 +182,7 @@ window.onload = function () {
     // Play
     play = function () {
       categories = [
-          ["everton", "liverpool", "swansea", "chelsea", "hull", "manchester-city", "newcastle-united"],
+          ["mumbai-indians", "chennai-super-kings", "royal-challengers-bangalore", "kolkata-knight-riders", "gujurat-titans", "delhi-capital", "sunrisers-hyderabad"],
           ["alien", "dirty-harry", "gladiator", "finding-nemo", "jaws"],
           ["manchester", "milan", "madrid", "amsterdam", "prague"]
       ];
@@ -195,7 +194,7 @@ window.onload = function () {
       buttons();
   
       geusses = [ ];
-      lives = 10;
+      lives = 6;
       counter = 0;
       space = 0;
       result();
@@ -211,7 +210,7 @@ window.onload = function () {
       hint.onclick = function() {
   
         hints = [
-          ["Based in Mersyside", "Based in Mersyside", "First Welsh team to reach the Premier Leauge", "Owned by A russian Billionaire", "Once managed by Phil Brown", "2013 FA Cup runners up", "Gazza's first club"],
+          ["Team with the most championships", "Team with yellow jersey", "Team with Virat Kohli", "Team owned by Shah Rukh Khan","Champions of IPL 2022 edition", "Team representing the capital city",  "Orange Army"],
           ["Science-Fiction horror film", "1971 American action film", "Historical drama", "Anamated Fish", "Giant great white shark"],
           ["Northern city in the UK", "Home of AC and Inter", "Spanish capital", "Netherlands capital", "Czech Republic capital"]
       ];
@@ -228,6 +227,7 @@ window.onload = function () {
       letters.parentNode.removeChild(letters);
       showClue.innerHTML = "";
       context.clearRect(0, 0, 400, 400);
+      gameEnded = false;
       play();
     }
   }
